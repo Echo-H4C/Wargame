@@ -98,14 +98,13 @@ flag 문자열은 필터링되어 입력할 수 없었지만 chr(ascii_num) 을 
 
  
 
-
+```
 chr(102)+chr(108)+chr(97)+chr(103)
- 
+```
 
  
 
-웹페이지 접속 (1)
-공격 과정 (1)
+![image](./image/Addition_calculator6.png)
  
 
 다음은 flag.txt 파일을 실행시켜 내용을 출력하기 위하여 다음의 값을 입력하였다.
