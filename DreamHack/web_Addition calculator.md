@@ -12,18 +12,11 @@
 ![image](./image/Addition_calculator2.png)
  
 
-웹페이지 접속 (1)
-웹페이지 접속 (2)
- 
-
- 
 
 그리고 1+2 를 입력하였더니 연산의 결괏값인 3을 출력하였다.
 
  
-
-웹페이지 접속 (1)
-웹페이지 접속 (3)
+![image](./image/Addition_calculator3.png)
  
 
  
