@@ -69,7 +69,7 @@ Register 버튼을 클릭하여 계정 생성 페이지로 이동했을 때 로�
 
  
 
-https://github.com/pugjs/pug/issues/3312
+참고자료 - https://github.com/pugjs/pug/issues/3312
  
 
  
@@ -102,12 +102,6 @@ https://github.com/pugjs/pug/issues/3312
 
 https://blog.rubiya.kr/index.php/2018/11/29/strtoupper/
 
- 
-strtoupper() – blog.rubiya.kr
-
-해당 문서는 위의 트윗을 보고 추가적인 연구를 진행해 Theori 내부 세미나에서 발표한 결과물이다.(사장님 허락받고 올린다) (%C4%B1) 는 LATIN SMALL LETTER DOTLESS I를, (%E2%84%AA) KELVIN SIGN을, (%C5%BF) 는 LATI
-
-blog.rubiya.kr
  
 
 위의 글의 내용 중 다음과 같은 내용이 있다.
