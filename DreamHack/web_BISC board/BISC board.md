@@ -46,23 +46,19 @@ Register 버튼을 클릭하여 계정 생성 페이지로 이동했을 때 로�
 
  
 
-웹페이지 접속 (1)
-소스코드 분석 (2)
+![image](./image/biscboard6.png)
  
 
 여기에서 방금 계정을 생성하여도 로그인이 되지 않았던 이유를 알 수 있는데 바로 line 27에 있는 코드 때문이다. request 를 통해 입력받은 id 값이 'bisc2023' 이 아니라면 id 값을 대문자로 치환한 후 검증하는 과정을 거치게 되는데 가입 시에 ID : test, PW : test 로 가입하였지만 로그인 시에 ID : test 를 입력하면 TEST 로 치환한 후 accounts 변수에 담긴 계정 정보와 비교하게 되기 때문에 서로 일치하지 않아 로그인이 되지 않았던 것이다.
 
  
 
-2.2. /edit
+<h2>2.2. /edit</h2>
  
 
 다음으로 주목했던 부분은 /edit 엔드포인트이다. 그 이유는 이곳에서만 유일하게 계정을 검증하는 로직이 존재하였기 때문이다.
 
- 
-
-웹페이지 접속 (1)
-소스코드 분석 (3)
+![image](./image/biscboard7.png)
  
 
 소스코드를 보면 line 93 ~ 95 까지의 코드에서 now 변수의 값을 검증하는 것을 알 수 있다. now 변수에 담기는 값은 위의 /login 소스코드에서 알 수 있는데 로그인에 성공하였을 때 id 변수의 값을 now 변수에 담는다. (/login 소스코드 line 29)
@@ -74,13 +70,6 @@ Register 버튼을 클릭하여 계정 생성 페이지로 이동했을 때 로�
  
 
 https://github.com/pugjs/pug/issues/3312
-
- 
-Code injection vulnerability in visitMixin and visitMixinBlock through "pretty" option · Issue #3312 · pugjs/pug
-
-Hello, I found that pug may allow an attacker to inject arbitrary javascript code if an attacker can control options.pretty. Pug Version: 3.0.0 Proof of concept Here is an vulnerable example includ...
-
-github.com
  
 
  
@@ -93,10 +82,10 @@ github.com
 
  
 
-3. 공격 시나리오
+<h1>3. 공격 시나리오</h1>
  
 
-1)  BISC2023 계정으로 로그인한다.
+1) BISC2023 계정으로 로그인한다.
 
  
 
