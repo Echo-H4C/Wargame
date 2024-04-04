@@ -83,10 +83,9 @@ function setValue(obj, key, value) {
 
  
 
-
+```
 /test?func=rename&file=read&filename=__proto__.filename&rename=../../flag
- 
-
+```
 그러면 setValue(read, __proto__.filename, ../../flag) 함수가 호출된다. 이 함수가 실행되면 read 객체의 프로토타입
 
  
