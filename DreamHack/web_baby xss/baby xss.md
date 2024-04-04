@@ -1,7 +1,7 @@
 <h1>1. 웹페이지 접속</h1>
  
 
-![image](./image/babyxss1.png)
+![image](./image/babyxss2.png)
  
 
 대상 웹사이트에 접속하였을 때의 메인화면이다. Baby's music, Saved, Go to Report 세가지 메뉴가 존재한다.
