@@ -12,24 +12,23 @@
 
  
 
-대상 웹사이트 메인
-Baby's music (1)
+![image](./image/babyxss3.png)
  
 
 입력할 수 있는 입력창과 확인 버튼 그리고 save 버튼이 존재하였으며 일단 임의의 문자열 입력 후 확인 버튼을 클릭해보았다.
 
  
 
-대상 웹사이트 메인
-Baby's music (2)
+![image](./image/babyxss4.png)
+
  
 
 nope! 이라는 메시지가 출력되었다.
 
  
 
-대상 웹사이트 메인
-Baby's music (3)
+![image](./image/babyxss5.png)
+
  
 
 임의의 숫자를 입력 후 확인 버튼 클릭 시 입력한 숫자가 포함된 문자열이 출력되는 것을 확인하였으며 save 버튼 클릭 시 id를 발급받을 수 있었다.
@@ -40,16 +39,15 @@ Baby's music (3)
 
  
 
-대상 웹사이트 메인
-Saved (1)
+![image](./image/babyxss6.png)
+
  
 
 ?id= 라는 문자열이 출력되었다. ?가 붙어있는 것을 보고 파라미터인 것 같다는 생각이 들어 url에 파라미터를 입력해보았다.
 
  
 
-대상 웹사이트 메인
-Saved (2)
+![image](./image/babyxss7.png)
  
 
 id 파라미터에 방금 발급받았던 id 값을 입력하였더니 사용자가 입력한 값이 포함되어 저장된 내용이 출력되었다.
@@ -59,17 +57,15 @@ id 파라미터에 방금 발급받았던 id 값을 입력하였더니 사용자
 다음은 Go to Report 메뉴에 접근해보았다.
 
  
+![image](./image/babyxss8.png)
 
-대상 웹사이트 메인
-Go to Report (1)
  
 
 입력창과 제출 버튼이 있어 임의의 문자열 입력 후 제출 버튼을 클릭해보았다.
 
  
 
-대상 웹사이트 메인
-Go to Report (2)
+![image](./image/babyxss9.png)
  
 
 Reported! 메시지가 출력되었는데 어떤 기능이 실행되는지는 알 수 없었다.
