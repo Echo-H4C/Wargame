@@ -2,43 +2,30 @@
 
 ![image](./image/filestorage1.png)
 
-파일이름과 파일내용을 입력할 수 있는 공간과 send 버튼이 있습니다. 임의의 내용을 입력해서 send 해보면
+파일이름과 파일내용을 입력할 수 있는 공간과 send 버튼이 있다. 임의의 내용을 입력해서 send 해보면
 
  
 
-다음과 같이 출력됩니다.
+다음과 같이 출력된다.
+
+![image](./image/filestorage2.png)
 
  
 
-
- 
-
-파일 이름을 abc 로 넣었는데 출력되는 파일 이름은 암호화되어 출력됩니다. 여러 방식으로 복호화 해본 결과 파일 이름을
-
- 
-
-sha256 방식으로 암호화한것을 알 수 있습니다. 이 이상은 웹페이지에서 알아낼 것이 없다고 판단되어 문제에서 주어진
-
- 
-
-소스코드를 분석하였습니다.
+파일 이름으로 abc 를 입력하였는데 파일 이름은 sha256 방식으로 암호화되어 출력된다. 
 
  
 
  
 
-2. 소스코드 분석
-이 웹사이트는 Node.js 로 작성되었습니다. 파일 이름이 출력되던 mkfile 엔드포인트 이외에도 /readfile, /test 엔드포인트도
+<h1>2. 소스코드 분석</h1>
+이 웹사이트는 Node.js 로 작성되었습니다. 파일 이름이 출력되던 mkfile 엔드포인트 이외에도 /readfile, /test 엔드포인트도 존재합니다. 
 
  
 
-존재합니다. 
+<h2>* 취약한 소스코드</h2>
 
- 
-
-* 취약한 소스코드
-
-
+```
 app.get('/test',function(req,resp){
 	let {func,filename,rename}=req.query;
 	if(func==null){
@@ -51,6 +38,7 @@ app.get('/test',function(req,resp){
 		resp.send("file reset");
 	}
  
+```
 
 /test 에서 취약점이 발견되었습니다. func=='rename' 일 때 호출되는 setValue 함수입니다.
 
