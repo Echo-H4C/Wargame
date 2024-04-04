@@ -19,7 +19,7 @@
  
 
 <h1>2. 소스코드 분석</h1>
-이 웹사이트는 Node.js 로 작성되었으며 파일 이름이 출력되던 mkfile 엔드포인트 이외에도 /readfile, /test 엔드포인트도 존재한다다. 
+이 웹사이트는 Node.js 로 작성되었으며 파일 이름이 출력되던 mkfile 엔드포인트 이외에도 /readfile, /test 엔드포인트도 존재한다. 
 
  
 
@@ -79,7 +79,8 @@ function setValue(obj, key, value) {
 
 <h1>3. 익스플로잇</h1>
 <br>
-/test의 setValue 함수를 호출하기 위해 다음의 URL 을 파라미터 값으로 전달하였다..
+/test의 setValue 함수를 호출하기 위해 다음의 URL 을 파라미터 값으로 전달하였다.
+<br>
 
  
 
