@@ -59,7 +59,7 @@ line 33 코드를 보면 위에서 입력하였던 수식의 연산 결괏값이
 
  
 
-
+```
 def filter(formula):
     w_list = list(string.ascii_lowercase + string.ascii_uppercase + string.digits)
     w_list.extend([" ", ".", "(", ")", "+"])
@@ -69,7 +69,7 @@ def filter(formula):
     for c in formula:
         if c not in w_list:
             return True
- 
+ ```
 
  
 
