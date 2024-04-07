@@ -10,3 +10,4 @@
  
 
 <메인>
+![image](./image/phpMyRedis1.png)
