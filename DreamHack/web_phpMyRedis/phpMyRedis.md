@@ -309,7 +309,7 @@ http://host3.dreamhack.games:22597/redis.php?cmd=../../../flag;
 
  
 
-../ 명령어를 통해 / 으로 이동하고, flag를 실행하는 명령어를 전송하였다.
+../ 명령어를 통해 / 으로 이동하고, flag를 실행하는 명령어를 전송하였다..
 
 
 ![image](./image/phpMyRedis4.png)
