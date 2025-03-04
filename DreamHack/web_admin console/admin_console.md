@@ -54,3 +54,62 @@ PW : 0p1q9o2w8i3e
 로그인에 성공하였으며 다시 Admin Console에 접근을 시도하였다.
 
 ![image](./images/11_수정.png)
+
+![image](./images/12_수정.png)
+
+하지만 "External Access is Not Allowed" 에러 메시지가 출력되며 접근이 불가하였다. 내부에서만 접근할 수 있는 것으로 보여 소스코드를 확인해보니 IP를 검증하는 코드가 존재하였다.
+
+![image](./images/13_수정.png)
+
+ClientIP() 함수로 검증하는 경우, 접근할 때 X-Forwarded-For 헤더 값을 추가하여 검증하는 코드를 우회할 수 있었다.
+
+![image](./images/14_수정.png)
+
+Admin Console 접근에 성공하였지만, 바로 FLAG를 얻을 수 있는 것은 아니었다. File Upload, Validate File, Health Check 기능이 존재하였는데, 이를 이용하여 어떻게 FLAG를 획득할 수 있는지 살펴보았다.
+
+![image](./images/15_수정.png)
+
+![image](./images/16_수정.png)
+
+먼저 File Upload 기능을 소스코드에서 살펴보면 확장자 필터링이 존재하기 때문에 .txt 확장자 파일 이외에는 업로드가 불가능하다.
+
+다음으로 Validate File 기능의 소스코드를 살펴보면 중간에 bot.DownloadFile 함수를 호출하는 것을 알 수 있다.
+
+![image](./images/17_수정.png)
+
+## bot.DownloadFIle
+
+```
+func DownloadFile(url, saveDir string) error {
+…….
+
+    filename := ""
+    cd := resp.Header.Get("Content-Disposition") // 설명 1
+
+    pattern := `filename="([^"]+)"`
+    r := regexp.MustCompile(pattern)
+    match := r.FindStringSubmatch(cd)
+    filename = match[1] // 설명 1 끝
+
+    filepath := path.Join(saveDir, filename) // 설명 2
+
+    out, err := os.Create(filepath) // 설명 3
+    if err != nil {
+        return fmt.Errorf("error creating file: %v", err)
+    }
+    defer out.Close()
+
+    _, err = io.Copy(out, resp.Body) // 설명 3 끝
+    if err != nil {
+        return fmt.Errorf("error writing file: %v", err)
+    }
+    return nil
+}
+```
+
+취약점이 발생하는 부분을 설명하기 위해 먼저 bot.DownloadFile 함수의 기능을 간단하게 알아봐야 한다.
+먼저 응답 헤더 중 Content-Disposition 값을 가져와서 정규식을 통해 가져온 헤더 내용 중 filename="value" 의 value에 해당하는 값을 추출하여 filename 변수에 저장한다(설명 1). 그리고 DownloadFile 함수의 두번째 인자인 saveDir에 filename 변수에 저장된 문자열을 합쳐 filepath 변수에 저장한다(설명 2). 그리고 os.Create 함수를 filepath 값을 인자로 주어 호출하여 파일을 생성하고, io.Copy 함수를 사용하여 응답 값의 Body 부분, 즉 파일의 내용을 생성한 파일에 복사한다(설명 3).
+
+
+
+
