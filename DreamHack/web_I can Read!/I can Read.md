@@ -24,6 +24,181 @@
 
 ![image](./images/5_수정.png)
 
-Dockerfile의 내용을 보면 flag 파일을 / 디렉터리에 복사한 것을 알 수 있다. 따라서 cat /flag 명령을 실행하면 flag를 획득할 수 있을 것이라고 판단하여 cat /flag 명령을 실행시키기 위한 템플릿 구문을 입력하였다.
+Dockerfile의 내용을 보면 flag 파일을 / 디렉터리에 복사한 것을 알 수 있다. 따라서 cat /flag 명령을 실행하면 flag를 획득할 수 있을 것이라고 판단하여 cat /flag 명령을 실행시키기 위한 템플릿 구문을 입력하였는데, flag 파일을 획득하지 못했다.
 
-![image](./images/6_수정.png)
+그 이유는 Dockerfile 파일을 살펴보면 알 수 있다. 위의 Dockerfile 파일 내용 중 강조된 부분의 다음 줄을 보면 RUN chmod 700 /flag 명령을 실행하는 것을 알 수 있다. 이 파일은 소유자에게만 읽기, 쓰기, 실행 권한이 허용되어 있으며 그룹 및 기타 사용자에게는 권한이 전부 허용되어 있지 않다.
+
+![image](./images/7_수정.png)
+
+![image](./images/8_수정.png)
+
+위의 두 그림은 각각 ls -al / , whoami 명령어를 실행시킨 결과이다.  두 그림을 보면 flag 파일의 소유자는 root이며 현재 사용자는 user 이기 때문에 /flag 파일을 읽기, 쓰기, 실행할 수 없는 것이다.
+
+다음은 /admin 폴더의 app.py 파일을 분석하였다.
+
+![image](./images/9_수정.png)
+
+이 app.py 파일에서 주목해야 할 부분은 debug=True 로 지정되어 있다는 것이다. debug 옵션이 True로 설정되어 실행되면 디버그 모드가 활성화되며 /console 페이지에 접근하면 디버그 터미널에 접근할 수 있다. 하지만 admin 페이지의 경우 클라이언트 측에서는 접근할 수 없으며 서버 내부에서만 접근이 가능하다.
+
+추가적인 정보 파악을 위해 Dockerfile 파일을 살펴보면 curl이 설치되는 것을 알 수 있다. 발견된 취약점을 이용해 curl localhost:8000 명령을 실행한 결과 admin 페이지에 접근이 가능한 것을 확인하였다.
+
+![image](./images/10_수정.png)
+
+또한 curl 명령어를 사용해 http://localhost:8000/console 페이지에 접근하여 디버그 터미널에 접근이 가능함을 확인하였다.
+
+![image](./images/11_수정.png)
+
+하지만 아래의 그림과 같이 디버그 터미널을 사용하기 위해서는 PIN 번호를 입력하여야 한다. 하지만 현재 curl 명령어의 실행 결과만 노출되고 있으므로 PIN 번호를 입력할 수 없다. 게다가 PIN 번호를 알 수 없으므로 디버그 터미널을 이용하는 것은 불가능하다.
+
+![image](./images/12_수정.png)
+
+소스코드 분석을 통해 SSTI 취약점의 존재를 확인하였으며 해당 취약점을 이용해 시스템 명령어를 실행시킬 수 있고, 실행된 결과가 노출되는 것을 확인할 수 있었다. 하지만 flag 파일은 소유자에게만 읽기, 쓰기, 실행 권한이 있기 때문에 해당 취약점으로는 flag 파일의 내용을 알 수 없다.
+
+하지만 디버그 기능이 허용되어 있기 때문에 해당 기능을 이용할 수 있는 방법을 조사하였다.
+
+![image](./images/15_수정.png)
+
+위의 그림은 로컬 환경에서 PIN 번호를 입력한 후 디버그 터미널에 파이썬 코드를 입력한 결과이다. 그리고 아래의 그림은 입력된 코드가 실행될 때의 로그이다.
+
+![image](./images/16_수정.png)
+
+로그를 보면 cmd 파라미터 입력 값으로 실행할 파이썬 코드를 받는 것을 알 수 있다. 이외에도 다른 파라미터 값이 요청 시에 포함되는 것을 알 수 있는데 이 파라미터 값들이 포함되어야 디버그 터미널이 정상적으로 실행된다. 요청에 포함되어야 할 파라미터는 다음과 같다.
+
+ __debugger__ : yes로 고정
+
+cmd : 실행할 파이썬 코드
+
+frm : 0 으로 고정
+
+pin : 디버그 터미널 PIN 번호
+
+s : 해당 파라미터에 입력되어야 할 값은 디버그 터미널 페이지에 접속하면 알아낼 수 있음.
+
+s 파라미터에 입력되어야 할 값을 알아내기 위해 curl localhost:8000/console 명령을 실행시켜 서버 내부의 디버그 터미널 페이지에 접근하였다.
+
+![image](./images/23_수정.png)
+
+디버그 터미널 페이지 소스코드에 SECRET 값이 포함되어있다. 이 값이 s 파라미터 값이 된다.
+
+# 3. 공격 방법
+
+1) SSTI 취약점을 이용하여 디버그 터미널을 사용하기 위해 필요한 PIN 번호를 알아낸다.
+
+2) PIN 번호를 포함하는 요청을 보내어 PIN 번호 인증을 실행한다.
+
+3) RCE 취약점을 발생시키는 파이썬 코드를 전송하여 서버 측 디버그 터미널에서 실행되도록 하여 flag를 획득한다.
+
+# 4. 공격 실행
+
+PIN 번호를 생성하기 위한 코드는 다음과 같다.
+
+```
+# This information only exists to make the cookie unique on the
+    # computer, not as a security feature.
+    probably_public_bits = [
+        username,
+        modname,
+        getattr(app, "__name__", type(app).__name__),
+        getattr(mod, "__file__", None),
+    ]
+
+    # This information is here to make it harder for an attacker to
+    # guess the cookie name.  They are unlikely to be contained anywhere
+    # within the unauthenticated debug page.
+    private_bits = [str(uuid.getnode()), get_machine_id()]
+
+    h = hashlib.sha1()
+    for bit in chain(probably_public_bits, private_bits):
+        if not bit:
+            continue
+        if isinstance(bit, str):
+            bit = bit.encode()
+        h.update(bit)
+    h.update(b"cookiesalt")
+
+    cookie_name = f"__wzd{h.hexdigest()[:20]}"
+
+    # If we need to generate a pin we salt it a bit more so that we don't
+    # end up with the same value and generate out 9 digits
+    if num is None:
+        h.update(b"pinsalt")
+        num = f"{int(h.hexdigest(), 16):09d}"[:9]
+
+    # Format the pincode in groups of digits for easier remembering if
+    # we don't have a result yet.
+    if rv is None:
+        for group_size in 5, 4, 3:
+            if len(num) % group_size == 0:
+                rv = "-".join(
+                    num[x : x + group_size].rjust(group_size, "0")
+                    for x in range(0, len(num), group_size)
+                )
+                break
+        else:
+            rv = num
+```
+
+코드를 보면 PIN 번호를 생성하기 위해 probably_public_bits, private_bits 두 리스트를 사용한다. 리스트의 요소 값들은 서버 측의 정보를 필요로 하여 일반적으로는 유추해낼 수 없으나 지금과 같이 서버 내부 정보를 파악할 수 있는 취약점이 존재한다면 요소 값들을 알아낼 수 있다.
+
+먼저 probably_public_bits 리스트의 각 요소는 다음의 의미를 가지고 있다.
+
+### username : app.py를 실행한 사용자의 이름 
+
+### modname : 일반적으로 flask.app 으로 지정됨.
+
+### getattr(app, "__name__", type(app).__name__) : 일반적으로 Flask로 지정됨.
+
+### getattr(mod, "__file__", None) : 서버 측 Flask 모듈 폴더의 app.py 파일이 존재하는 절대경로. 파이썬 버전마다 다르므로 확인이 필요함. (일반적으로 usr/local/lib/python[python_version]/site-packages/flask/app.py)
+
+그리고 private_bits 리스트의 각 요소(str(uuid.getnode()), get_machine_id())는 다음과 같다.
+
+### str(uuid.getnode()) : uuid.getnode() 함수는 서버 측 PC의 MAC 주소를 int형으로 반환한다.
+
+### get_machine_id()
+
+```
+def get_machine_id() -> str | bytes | None:
+    global _machine_id
+
+    if _machine_id is not None:
+        return _machine_id
+
+    def _generate() -> str | bytes | None:
+        linux = b""
+
+        # machine-id is stable across boots, boot_id is not.
+        for filename in "/etc/machine-id", "/proc/sys/kernel/random/boot_id":
+            try:
+                with open(filename, "rb") as f:
+                    value = f.readline().strip()
+            except OSError:
+                continue
+
+            if value:
+                linux += value
+                break
+
+        # Containers share the same machine id, add some cgroup
+        # information. This is used outside containers too but should be
+        # relatively stable across boots.
+        try:
+            with open("/proc/self/cgroup", "rb") as f:
+                linux += f.readline().strip().rpartition(b"/")[2]
+        except OSError:
+            pass
+
+        if linux:
+            return linux
+```
+
+먼저 /etc/machine-id, /proc/sys/kernel/random/boot-id 두 파일의 내용을 한 줄 가져와서 합친 후 linux 변수에 저장하고 /proc/self/cgroup 파일의 내용을 한 줄 가져와서 strip().rpartition(b"/")[2] 한 값을 linux 변수에 이어붙인다. 
+
+ 
+
+probably_public_bits 리스트의 요소 값들은 취약점을 통해 알아내지 않아도 유추가 가능하기 때문에 private_bits 리스트의 각 요소 값들을 알아내야한다. 
+
+ 
+
+uuid.getnode() 함수의 반환 값을 알아내기 위해 /sys/class/net/eth0/address 파일의 내용을 출력하여 MAC 주소를 알아낸 후 int 형으로 변환하였다. 그리고 get_machine_id() 함수의 반환값을 알아내기 위해 /etc/machine-id 파일의 내용을 출력하였으나 파일이 존재하지 않았다. 따라서 /proc/sys/kernel/random/boot_id 파일과 /proc/self/cgroup 파일의 내용을 출력하여 get_machine_id() 함수의 반환값을 알아내었으며 그 결과는 다음과 같다.
+
+
