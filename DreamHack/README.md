@@ -3,5 +3,5 @@
 3. [Web] baby xss [link](https://github.com/Echo-H4C/Wargame/blob/main/DreamHack/web_baby%20xss/baby%20xss.md)
 4. [Web] filestorage [link](https://github.com/Echo-H4C/Wargame/blob/main/DreamHack/web_filestorage/filestorage.md)
 5. [Web] phpMyRedis [link](https://github.com/Echo-H4C/Wargame/blob/main/DreamHack/web_phpMyRedis/phpMyRedis.md)
-6. [Web] admin console
+6. [Web] admin console [link](https://github.com/Echo-H4C/Wargame/blob/main/DreamHack/web_admin%20console/admin_console.md)
 7. [Web] I can Read!
