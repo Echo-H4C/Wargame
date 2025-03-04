@@ -204,7 +204,9 @@ def get_machine_id() -> str | bytes | None:
 
 probably_public_bits 리스트의 요소 값들은 취약점을 통해 알아내지 않아도 유추가 가능하기 때문에 private_bits 리스트의 각 요소 값들을 알아내야한다. 
 
-uuid.getnode() 함수의 반환 값을 알아내기 위해 /sys/class/net/eth0/address 파일의 내용을 출력하여 MAC 주소를 알아낸 후 int 형으로 변환하였다. 그리고 get_machine_id() 함수의 반환값을 알아내기 위해 /etc/machine-id 파일의 내용을 출력하였으나 파일이 존재하지 않았다. 따라서 /proc/sys/kernel/random/boot_id 파일과 /proc/self/cgroup 파일의 내용을 출력하여 get_machine_id() 함수의 반환값을 알아내었으며 그 결과는 다음과 같다.
+uuid.getnode() 함수의 반환 값을 알아내기 위해 /sys/class/net/eth0/address 파일의 내용을 출력하여 MAC 주소를 알아낸 후 int 형으로 변환하였다. 그리고 get_machine_id() 함수의 반환값을 알아내기 위해 /etc/machine-id 파일의 내용을 출력하였으나 파일이 존재하지 않았다. 따라서 /proc/sys/kernel/random/boot_id 파일과 /proc/self/cgroup 파일의 내용을 출력하여 get_machine_id() 함수의 반환값을 알아내었다.
+
+PIN 생성에 필요한 probably_public_bits, private_bits 리스트의 값은 다음과 같다.
 
 ```
 probably_public_bits = [
