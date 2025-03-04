@@ -3,3 +3,5 @@
 3. [Web] baby xss
 4. [Web] filestorage
 5. [Web] phpMyRedis
+6. [Web] admin console
+7. [Web] I can Read!
