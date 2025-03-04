@@ -165,9 +165,29 @@ else
 fi
 ```
 
+## 과정 2
 
+Validate File 기능을 실행시킨다. 기능 실행 시 전달되는 path 파라미터 값은 malicious.sh\";dummy=.txt 로 한다.
 
+이렇게 파라미터 값이 전달되면 Validate File 기능이 실행되는 과정에서 bot.DownloadFile 함수를 호출하게 되고, /app/bot/jobs 디렉터리에 업로드한 쉘 스크립트 파일이 생성된다. Validate File에서 bot.DownloadFile 함수는 다음과 같은 형태로 호출된다.
 
+```
+bot.DownloadFile("http://localhost:8000/uploads/client/malicious.sh\";dummy=.txt"), "/app/bot/jobs/")
+```
+
+이렇게 호출되면 업로드한 파일에 요청을 보내고 응답 값의 body 내용을 파일 내용으로 쓴 후, Content-Disposition 헤더의 filename="" 에서 큰 따옴표 내부의 문자열을 파일 이름으로 해서 /app/bot/jobs/ 디렉터리에  파일이 생성되는데, malicious.sh이 생성되는 이유는 우리가 업로드한 파일에 요청을 보냈을 때, Content-Disposition 헤더의 내용은 다음과 같을 것이기 때문이다.
+
+```
+Content-Disposition: filename="malicious.sh";dummy=.txt"
+```
+
+## 과정 3
+
+Health Check 기능을 사용하여 업로드한 malicious.sh 를 실행한다. 입력 값은 malicious 이다. 쉘 스크립트가 정상적으로 실행되었다면 다음과 같은 메시지를 확인할 수 있다.
+
+![image](./images/20_수정.png)
+
+이제 파일이 생성되었으므로 /uploads/client/test.txt 파일에 접근한다. 그러면 test.txt 파일이 다운로드되고, FLAG 값을 확인할 수 있다.
 
 
 
