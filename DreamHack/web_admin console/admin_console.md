@@ -5,3 +5,5 @@
 ![image](./images/1_수정.png)
 
 Admin Console 버튼을 클릭해보면, 접근이 금지되어 있는 것을 확인할 수 있다.
+
+![image](./images/2_수정.png)
