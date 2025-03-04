@@ -237,6 +237,10 @@ http://host1.dreamhack.games:12487/%7B%7B%20''.__class__.__mro__[1].__subclasses
 
 ![image](./images/25_수정.png)
 
+# 5. 참고
 
+- https://github.com/pallets/werkzeug/blob/main/src/werkzeug/debug/__init__.py
+
+- https://github.com/its-arun/Werkzeug-Debug-RCE/blob/master/werkzeug.py
 
 
