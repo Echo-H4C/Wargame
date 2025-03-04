@@ -14,3 +14,4 @@ Admin Console 버튼을 클릭해보면, 접근이 금지되어 있는 것을 �
 
 # 2. 취약점 분석
 
+![image](./images/5_수정.png)
