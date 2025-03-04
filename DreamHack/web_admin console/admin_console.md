@@ -44,10 +44,10 @@ checkBannedKeyword 함수와 인증을 처리하는 부분을 같이 살펴보�
 
 계정 정보를 다음과 같이 주어 로그인을 시도하였다.
 
-'''
+```
 ID : \u212Aimgildong123
 PW : 0p1q9o2w8i3e
-'''
+```
 
 ![image](./images/10_수정.png)
 
