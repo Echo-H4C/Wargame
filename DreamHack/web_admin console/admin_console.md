@@ -228,9 +228,9 @@ healthcheck_req = session.post(f"{URL}/admin/healthcheck",headers=headers,json=t
 
 # 4. get FLAG
 
-flag = session.get(f"{URL}/uploads/client/test.txt")
+flag = session.get(f"{URL}/uploads/client/test.txt").text
 
-print("FLAG : " + flag.text)
+print("FLAG : " + flag)
 ```
 
 ## 4. 참고
