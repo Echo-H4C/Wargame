@@ -110,6 +110,64 @@ func DownloadFile(url, saveDir string) error {
 취약점이 발생하는 부분을 설명하기 위해 먼저 bot.DownloadFile 함수의 기능을 간단하게 알아봐야 한다.
 먼저 응답 헤더 중 Content-Disposition 값을 가져와서 정규식을 통해 가져온 헤더 내용 중 filename="value" 의 value에 해당하는 값을 추출하여 filename 변수에 저장한다(설명 1). 그리고 DownloadFile 함수의 두번째 인자인 saveDir에 filename 변수에 저장된 문자열을 합쳐 filepath 변수에 저장한다(설명 2). 그리고 os.Create 함수를 filepath 값을 인자로 주어 호출하여 파일을 생성하고, io.Copy 함수를 사용하여 응답 값의 Body 부분, 즉 파일의 내용을 생성한 파일에 복사한다(설명 3).
 
+마지막으로 Health Check 기능을 살펴보면 req.Target 값을 인자로 하여 bot.Healthcheck 함수를 호출한다.
+
+![image](./images/23_수정.png)
+
+## bot.Healthcheck
+
+```
+func Healthcheck(target string) string {
+    matched, _ := regexp.MatchString("^[a-zA-Z0-9]+$", target)
+    if !matched {
+        return "invalid target"
+    }
+    cmd := exec.Command("sh", "/app/bot/jobs/"+target+".sh")
+    output, _ := cmd.CombinedOutput()
+    return filter(string(output))
+
+}
+```
+
+bot.Healthcheck에서는 인자로 받는 target 값을 포함한 문자열을 사용하여 sh 명령을 실행시킨다. 하지만 정규식을 사용하여 특수문자를 필터링하기 때문에 다른 디렉터리의 파일을 실행시킬 수는 없다.
+
+# 3. 공격 과정
+
+1. File Upload 기능을 사용하여 필터링을 우회하고 쉘 스크립트 파일을 업로드한다.
+
+2. Validate File 기능을 사용하여 Health Check 기능에서 실행시키기 위한 쉘 스크립트가 저장된 디렉터리인 /app/bot/jobs 디렉터리에 쉘 스크립트 파일을 생성한다.
+
+3. Health Check 기능을 사용하여 1. 에서 업로드한 쉘 스크립트를 실행시켜 FLAG를 획득한다.
+
+## 과정 1
+
+FLAG 파일 내용을 읽어서 /app/uploads/client 디렉터리의 test.txt 파일에 FLAG 파일의 내용을 쓰는 생성하는 내용의 쉘 스크립트를 업로드한다. 파일 이름은 malicious.sh"dummy=.txt 으로 한다.
+
+#### 쉘 스크립트 코드
+
+```
+#!/bin/bash
+
+# 읽을 파일
+SOURCE_FILE="/app/FLAG"
+
+# 생성할 파일
+TARGET_FILE="/app/uploads/client/test.txt"
+
+ls -l "$SOURCE_FILE"
+
+# 파일 존재 확인 및 처리
+if [ -f "$SOURCE_FILE" ]; then
+    cat "$SOURCE_FILE" > "$TARGET_FILE"
+    echo "파일 '$TARGET_FILE'이(가) 성공적으로 생성되었습니다."
+else
+    echo "오류: 파일 '$SOURCE_FILE'을(를) 찾을 수 없습니다."
+fi
+```
+
+
+
+
 
 
 
