@@ -79,7 +79,7 @@ Admin Console 접근에 성공하였지만, 바로 FLAG를 얻을 수 있는 것
 
 ## bot.DownloadFIle
 
-```java
+```go
 func DownloadFile(url, saveDir string) error {
 …….
 
@@ -116,7 +116,7 @@ func DownloadFile(url, saveDir string) error {
 
 ## bot.Healthcheck
 
-```java
+```go
 func Healthcheck(target string) string {
     matched, _ := regexp.MatchString("^[a-zA-Z0-9]+$", target)
     if !matched {
